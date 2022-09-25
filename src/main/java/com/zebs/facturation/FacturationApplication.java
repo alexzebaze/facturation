@@ -11,5 +11,4 @@ public class FacturationApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FacturationApplication.class, args);
 	}
-
 }
