@@ -1,30 +1,28 @@
 package com.zebs.facturation.commun.exception;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ResponseExceptionEntity {
-    private String message;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private ZonedDateTime timestamp;
     private HttpStatus httpStatus;
     private int statusCode;
-    private ZonedDateTime timestamp;
-    private Throwable throwable;
+    private String message;
+    private List errors = new ArrayList();
 
-    public ResponseExceptionEntity(String message, HttpStatus httpStatus, int statusCode, ZonedDateTime timestamp) {
+    public ResponseExceptionEntity(String message, HttpStatus httpStatus, int statusCode, ZonedDateTime timestamp, List errors) {
         this.message = message;
         this.httpStatus = httpStatus;
         this.statusCode = statusCode;
         this.timestamp = timestamp;
-    }
-
-    public ResponseExceptionEntity(String message, HttpStatus httpStatus, int statusCode, ZonedDateTime timestamp, Throwable throwable) {
-        this.message = message;
-        this.httpStatus = httpStatus;
-        this.statusCode = statusCode;
-        this.timestamp = timestamp;
-        this.throwable = throwable;
+        this.errors = errors;
     }
 }

@@ -11,6 +11,6 @@ public interface ProjetService {
     Projet findById(final UUID id);
     void delete(Projet projet);
     void deleteById(UUID id);
-    Projet updateProjet(Projet projet);
+    Projet updateProjet(Projet projet, UUID id);
     Projet updatePartialProjet(Projet projet, UUID id);
 }

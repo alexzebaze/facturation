@@ -1,17 +1,18 @@
 package com.zebs.facturation.projet.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zebs.facturation.factureclient.model.entity.FactureClient;
+import com.zebs.facturation.facturefournisseur.model.entity.FactureFournisseur;
 import com.zebs.facturation.model.entity.Base;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import uk.co.jemos.podam.common.PodamExclude;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "projets")
@@ -23,7 +24,7 @@ import java.util.Date;
 public class Projet extends Base {
 
     @ApiModelProperty(notes = "Nom du projet")
-    @NotBlank(message = "Titre du projet ne peut etre vide")
+    @NotBlank(message = "Le Titre du projet ne peut etre vide")
     @Column(nullable = false)
     private String titre;
 
@@ -42,19 +43,15 @@ public class Projet extends Base {
     private Date dateFin;
 
     @ApiModelProperty(notes = "Status du projet")
+    @NotNull(message = "Le status ne peut etre null")
     private ProjetStatus status;
 
-    @Override
-    public String toString() {
-        return "Projet{" +
-                "id=" + id +
-                ", titre=" + titre +
-                ", descripion=" + description +
-                ", dateCreated=" + dateCreated +
-                ", dateUpdated=" + dateUpdated +
-                ", dateDebut=" + dateDebut +
-                ", dateFin=" + dateFin +
-                ", status=" + status +
-                '}';
-    }
+    @OneToMany(mappedBy = "projet")
+    @PodamExclude
+    private Set<FactureFournisseur> facturesFournisseurs;
+
+    @OneToMany(mappedBy = "projet")
+    @PodamExclude
+    private Set<FactureClient> facturesClients;
+
 }

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,17 +58,18 @@ public class ProjetController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseModel<Projet>> updateProjet(@PathVariable UUID id, @RequestBody Projet projet){
-        Projet projetUpdate = projetService.updateProjet(projet);
+    public ResponseEntity<ResponseModel<Projet>> updateProjet(@PathVariable UUID id, @Valid @RequestBody Projet projet){
+        Projet projetUpdate = projetService.updateProjet(projet, id);
 
         return ResponseHandler.generateResponse(projetUpdate, HttpStatus.OK, "save update");
     }
 
-    @PutMapping("/{id}/partial")
+    @PatchMapping("/{id}")
     public ResponseEntity<ResponseModel<Projet>> updatePartialProjet(@PathVariable UUID id, @RequestBody Projet projet){
+        System.out.println(projet);
         Projet projetUpdate = projetService.updatePartialProjet(projet, id);
 
-        return ResponseHandler.generateResponse(projetUpdate, HttpStatus.OK, "save update");
+        return ResponseHandler.generateResponse(projetUpdate, HttpStatus.OK, "save update partial");
     }
 
 }

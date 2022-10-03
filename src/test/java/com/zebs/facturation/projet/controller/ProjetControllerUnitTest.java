@@ -224,7 +224,8 @@ public class ProjetControllerUnitTest {
     @Test
     void updateProjet() throws Exception {
         Projet projet = podamFactory.manufacturePojo(Projet.class);
-        when(projetService.updateProjet(any(Projet.class))).thenReturn(projet);
+        projet.setTitre("Projet");
+        when(projetService.updateProjet(any(Projet.class), any(UUID.class))).thenReturn(projet);
 
         mockMvc.perform(put(PATH + "/"+projet.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -235,8 +236,9 @@ public class ProjetControllerUnitTest {
                 .andExpect(jsonPath("$.data.id", is(String.valueOf(projet.getId()))))
                 .andExpect(jsonPath("$.data.titre", is(projet.getTitre())));
 
-        verify(projetService).updateProjet(captorProjet.capture());
+        verify(projetService).updateProjet(captorProjet.capture(), captorUuid.capture());
 
+        assertThat(projet.getId()).isEqualTo(captorUuid.getValue());
         assertThat(objectMapper.writeValueAsString(projet))
                 .isEqualToIgnoringCase(objectMapper.writeValueAsString(captorProjet.getValue()));
     }
@@ -244,9 +246,10 @@ public class ProjetControllerUnitTest {
     @Test
     void updatePartialProjet() throws Exception {
         Projet projet = podamFactory.manufacturePojo(Projet.class);
+        projet.setTitre("Projet");
         when(projetService.updatePartialProjet(any(Projet.class), isA(UUID.class))).thenReturn(projet);
 
-        mockMvc.perform(put(PATH + "/"+projet.getId()+"/partial")
+        mockMvc.perform(patch(PATH + "/"+projet.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(ObjectConverter.objectToJson(projet)))
                 .andExpect(status().isOk())

@@ -1,6 +1,6 @@
-package com.zebs.facturation.projet.model.entity;
+package com.zebs.facturation.facture.model.entity;
 
-public enum ProjetStatus {
+public enum FactureStatus {
     EN_ATTENTE(1, "EN_ATTENTE"),
     EN_COURS(2, "EN_COURS"),
     TERMINE(3, "TERMINE");
@@ -8,7 +8,7 @@ public enum ProjetStatus {
     private final int value;
     private final String label;
 
-    ProjetStatus(int value, String label) {
+    FactureStatus(int value, String label) {
         this.value = value;
         this.label = label;
     }
@@ -20,5 +20,4 @@ public enum ProjetStatus {
     public String getLabel(){
         return this.label;
     }
-
 }

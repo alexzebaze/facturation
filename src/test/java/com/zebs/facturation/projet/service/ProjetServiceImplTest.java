@@ -154,7 +154,7 @@ class ProjetServiceImplTest {
         when(projetDao.findById(any(UUID.class))).thenReturn(Optional.empty());
 
         assertThatThrownBy(()->
-                projetService.updateProjet(projet))
+                projetService.updateProjet(projet, projet.getId()))
                 .isInstanceOf(ProjetException.class)
                 .hasMessage(ProjetConstant.PROJET_NOT_FOUND.getLabel());
 
@@ -170,7 +170,7 @@ class ProjetServiceImplTest {
         when(projetDao.findById(any(UUID.class))).thenReturn(Optional.ofNullable(projet));
         when(projetDao.save(any(Projet.class))).thenReturn(projet);
 
-        Projet projetExpect = projetService.updateProjet(projet);
+        Projet projetExpect = projetService.updateProjet(projet, projet.getId());
 
         verify(projetDao).findById(captorUuid.capture());
         verify(projetDao).save(captor.capture());

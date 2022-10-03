@@ -63,10 +63,12 @@ public class ProjetServiceImpl implements ProjetService {
     }
 
     @Override
-    public Projet updateProjet(Projet projet) {
-        Optional<Projet> projetExist = projetDao.findById(projet.getId());
+    public Projet updateProjet(Projet projet, UUID id) {
+        if(!projet.getId().equals(id))
+            throw new ProjetException(projetNotFound, HttpStatus.NOT_FOUND);
+
+        Optional<Projet> projetExist = projetDao.findById(id);
         if(projetExist.isPresent()){
-            projet.setDateUpdated(new Date());
             return projetDao.save(projet);
         }
         throw new ProjetException(projetNotFound, HttpStatus.NOT_FOUND);
@@ -74,6 +76,9 @@ public class ProjetServiceImpl implements ProjetService {
 
     @Override
     public Projet updatePartialProjet(Projet projetUpdate, UUID id) {
+        if(!projetUpdate.getId().equals(id))
+            throw new ProjetException(projetNotFound, HttpStatus.NOT_FOUND);
+
         try {
             Projet currentProjet = findById(id);
 
@@ -88,7 +93,6 @@ public class ProjetServiceImpl implements ProjetService {
             if(projetUpdate.getStatus() != null)
                 currentProjet.setStatus(projetUpdate.getStatus());
 
-            currentProjet.setDateUpdated(new Date());
             return projetDao.save(currentProjet);
         }
         catch (Exception e){
