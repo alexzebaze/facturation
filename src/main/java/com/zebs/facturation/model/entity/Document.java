@@ -21,6 +21,7 @@ import java.util.Date;
  */
 
 @MappedSuperclass
+@EqualsAndHashCode(callSuper = true)
 public abstract class Document extends Base {
 
     @ApiModelProperty(notes = "Date de facturation")

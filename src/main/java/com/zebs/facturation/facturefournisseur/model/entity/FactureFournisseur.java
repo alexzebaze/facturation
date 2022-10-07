@@ -10,6 +10,7 @@ import com.zebs.facturation.model.entity.Document;
 import com.zebs.facturation.reglement.model.entity.Reglement;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import uk.co.jemos.podam.common.PodamExclude;
@@ -21,6 +22,7 @@ import java.util.Set;
 @Entity
 @Table(name = "factures_fournisseurs")
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class FactureFournisseur extends Document {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
