@@ -1,0 +1,3 @@
+INSERT INTO projets (id, date_created, date_updated, date_debut, date_fin, description, status, titre) VALUES
+('84dcd1cd-0034-46ad-a0f3-486a96e6502c', '2022-09-17 18:01:10.000000', '2022-09-17 18:01:10.000000', '2022-09-17 18:01:10.000000', '2022-09-17 18:01:10.000000', 'Installation wifi akwa palace', 1, 'projet10'),
+('84215921-abd4-4ad7-85ff-c0a7b21d6070', '2022-09-17 18:01:10.000000', '2022-09-17 18:01:10.000000', '2022-09-17 18:01:10.000000', '2022-09-17 18:01:10.000000', 'Peinture bonadouma home', 2, 'projet11');
