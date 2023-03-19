@@ -26,7 +26,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
 public class RestExceptionHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {ProjetException.class})

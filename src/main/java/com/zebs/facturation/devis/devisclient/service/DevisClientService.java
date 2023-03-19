@@ -1,19 +1,20 @@
 package com.zebs.facturation.devis.devisclient.service;
 
+import com.zebs.facturation.commun.util.export.IExport;
+import com.zebs.facturation.devis.devisclient.common.exception.DevisClientException;
 import com.zebs.facturation.devis.devisclient.common.util.DevisClientConstant;
 import com.zebs.facturation.devis.devisclient.dao.DevisClientDao;
 import com.zebs.facturation.devis.devisclient.model.entity.DevisClient;
-import com.zebs.facturation.personne.client.common.exception.ClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
-public class DevisClientServiceImpl implements IDevisClientService {
+@Service
+public class DevisClientService implements IDevisClientService {
 
-    private final String devisClientNotFound = DevisClientConstant.DEVIS_CLIENT_NOT_FOUND.getLabel();
+    private final String devisClientNotFound = DevisClientConstant.DEVIS_NOT_FOUND.getLabel();
 
     @Autowired
     private DevisClientDao devisClientDao;
@@ -35,7 +36,7 @@ public class DevisClientServiceImpl implements IDevisClientService {
 
     @Override
     public DevisClient findById(UUID id) {
-        return devisClientDao.findById(id).orElseThrow(() -> new ClientException(devisClientNotFound, HttpStatus.NOT_FOUND));
+        return devisClientDao.findById(id).orElseThrow(() -> new DevisClientException(devisClientNotFound, HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -55,18 +56,27 @@ public class DevisClientServiceImpl implements IDevisClientService {
             devisClientDao.deleteById(id);
             return;
         }
-        throw new ClientException(devisClientNotFound, HttpStatus.NOT_FOUND);
+        throw new DevisClientException(devisClientNotFound, HttpStatus.NOT_FOUND);
     }
 
     @Override
     public DevisClient update(DevisClient devis, UUID id) {
         if(!devis.getId().equals(id))
-        throw new ClientException(devisClientNotFound, HttpStatus.NOT_FOUND);
+        throw new DevisClientException(devisClientNotFound, HttpStatus.NOT_FOUND);
 
         Optional<DevisClient> clientExist = devisClientDao.findById(id);
         if(clientExist.isPresent()){
             return devisClientDao.save(devis);
         }
-        throw new ClientException(devisClientNotFound, HttpStatus.NOT_FOUND);
+        throw new DevisClientException(devisClientNotFound, HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public String export(IExport export, DevisClient devis) {
+        Map<String, Object> datas = new HashMap<>();
+        // TODO map devis entity objet to MAP with Stream
+        String filename = export.export(datas, "destination_dir", "filename.pdf");
+
+        return filename;
     }
 }

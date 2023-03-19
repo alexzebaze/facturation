@@ -1,10 +1,7 @@
 package com.zebs.facturation.reglement.model.entity;
 
-import com.zebs.facturation.bonlivraison.model.entity.BonLivraison;
-import com.zebs.facturation.devisfournisseur.model.entity.DevisFournisseur;
-import com.zebs.facturation.facturefournisseur.model.entity.FactureFournisseur;
+import com.zebs.facturation.Facture.facturefournisseur.model.entity.FactureFournisseur;
 import com.zebs.facturation.model.entity.Base;
-import com.zebs.facturation.model.entity.Document;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;

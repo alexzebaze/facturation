@@ -1,8 +1,8 @@
-package com.zebs.facturation.factureclient.model.entity;
+package com.zebs.facturation.Facture.factureclient.model.entity;
 
 
 import com.zebs.facturation.personne.client.model.entity.Client;
-import com.zebs.facturation.devisclient.model.entity.DevisClient;
+import com.zebs.facturation.devis.devisclient.model.entity.DevisClient;
 import com.zebs.facturation.facture.model.entity.FactureStatus;
 import com.zebs.facturation.model.entity.Document;
 import com.zebs.facturation.projet.model.entity.Projet;

@@ -1,7 +1,7 @@
 package com.zebs.facturation.model.entity;
 
 import com.zebs.facturation.article.model.entity.Article;
-import com.zebs.facturation.tva.model.entity.Tva;
+import com.zebs.facturation.tva.model.entity.Taxe;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,10 +10,10 @@ import javax.persistence.*;
 @Data
 public abstract class DocumentLigne extends Base {
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    protected Tva tva;
+    @ManyToOne(cascade = CascadeType.DETACH)
+    protected Taxe taxe;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.DETACH)
     protected Article article;
 
     @Lob

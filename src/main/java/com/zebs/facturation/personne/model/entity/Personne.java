@@ -1,5 +1,6 @@
-package com.zebs.facturation.model.entity;
+package com.zebs.facturation.personne.model.entity;
 
+import com.zebs.facturation.model.entity.Base;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @Inheritance(strategy= InheritanceType.TABLE_PER_CLASS)
-public abstract class Personne extends Base{
+public abstract class Personne extends Base {
 
     protected String nom;
     protected String prenom;

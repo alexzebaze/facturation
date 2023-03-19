@@ -1,7 +1,7 @@
-package com.zebs.facturation.fournisseur.model.entity;
+package com.zebs.facturation.personne.fournisseur.model.entity;
 
-import com.zebs.facturation.facturefournisseur.model.entity.FactureFournisseur;
-import com.zebs.facturation.model.entity.Personne;
+import com.zebs.facturation.Facture.facturefournisseur.model.entity.FactureFournisseur;
+import com.zebs.facturation.personne.model.entity.Personne;
 import lombok.Data;
 import uk.co.jemos.podam.common.PodamExclude;
 

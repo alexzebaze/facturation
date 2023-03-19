@@ -1,7 +1,7 @@
 package com.zebs.facturation.devis.devisclient.service;
 
 import com.zebs.facturation.Document.service.IDocumentLigneService;
-import com.zebs.facturation.devis.devisclient.model.entity.DevisLigne;
+import com.zebs.facturation.devis.devisclient.model.entity.DevisClientLigne;
 
-public interface IDevisLigne extends IDocumentLigneService<DevisLigne> {
+public interface IDevisClientLigne extends IDocumentLigneService<DevisClientLigne> {
 }

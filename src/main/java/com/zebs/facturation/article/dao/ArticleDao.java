@@ -1,4 +1,10 @@
 package com.zebs.facturation.article.dao;
 
-public class ArticleDao {
+import com.zebs.facturation.article.model.entity.Article;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.UUID;
+
+public interface ArticleDao extends JpaRepository<Article, UUID> {
+
 }

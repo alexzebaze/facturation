@@ -1,11 +1,11 @@
 package com.zebs.facturation.personne.client.common.util;
 
-public enum  PersonneConstant {
-    PERSONNE_NOT_FOUND("Client introuvable");
+public enum ClientConstant {
+    CLIENT_NOT_FOUND("Client introuvable");
 
     private String label;
 
-    PersonneConstant(String label) {
+    ClientConstant(String label) {
         this.label = label;
     }
 

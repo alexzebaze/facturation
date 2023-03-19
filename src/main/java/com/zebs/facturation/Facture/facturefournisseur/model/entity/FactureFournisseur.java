@@ -1,10 +1,10 @@
-package com.zebs.facturation.facturefournisseur.model.entity;
+package com.zebs.facturation.Facture.facturefournisseur.model.entity;
 
 
 import com.zebs.facturation.personne.fournisseur.model.entity.Fournisseur;
 import com.zebs.facturation.bonlivraison.model.entity.BonLivraison;
-import com.zebs.facturation.devisclient.model.entity.DevisClient;
-import com.zebs.facturation.devisfournisseur.model.entity.DevisFournisseur;
+import com.zebs.facturation.devis.devisclient.model.entity.DevisClient;
+import com.zebs.facturation.devis.devisfournisseur.model.entity.DevisFournisseur;
 import com.zebs.facturation.facture.model.entity.FactureStatus;
 import com.zebs.facturation.model.entity.Document;
 import com.zebs.facturation.projet.model.entity.Projet;

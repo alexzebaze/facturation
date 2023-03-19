@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  facturation:
+    container_name: facturation
+    image: facturation:1.0
+    build: .
+    restart: on-failure
+    ports:
+      - 8081:8081
+    depends_on:
+      - mysqldb
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url": "jdbc:mysql://mysqldb:3306/facturation",
+        "spring.datasource.username": "root",
+        "spring.datasource.password": "root"
+      }'
+
+  mysqldb:
+    container_name: mysql
+    image: mysql:5.7
+    #restart: always
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: facturation
+      MYSQL_ROOT_PASSWORD: root
+
+  phpmyadmin:
+    image: phpmyadmin
+    depends_on:
+      - mysqldb
+    restart: always
+    ports:
+      - 8082:80
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      PMA_HOST: mysqldb
+      PMA_USER: root
+      PMA_PASSWORD: root
+
+volumes:
+  mysql-data:

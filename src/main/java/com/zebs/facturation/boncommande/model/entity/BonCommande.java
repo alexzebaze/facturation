@@ -1,7 +1,7 @@
 package com.zebs.facturation.boncommande.model.entity;
 
 import com.zebs.facturation.bonlivraison.model.entity.BonLivraison;
-import com.zebs.facturation.devisfournisseur.model.entity.DevisFournisseur;
+import com.zebs.facturation.devis.devisfournisseur.model.entity.DevisFournisseur;
 import com.zebs.facturation.model.entity.Document;
 import lombok.Data;
 

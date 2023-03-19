@@ -1,8 +1,8 @@
 package com.zebs.facturation.projet.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.zebs.facturation.factureclient.model.entity.FactureClient;
-import com.zebs.facturation.facturefournisseur.model.entity.FactureFournisseur;
+import com.zebs.facturation.Facture.factureclient.model.entity.FactureClient;
+import com.zebs.facturation.Facture.facturefournisseur.model.entity.FactureFournisseur;
 import com.zebs.facturation.model.entity.Base;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;

@@ -1,4 +1,4 @@
-package com.zebs.facturation.devisfournisseur.model.entity;
+package com.zebs.facturation.devis.devisfournisseur.model.entity;
 
 import com.zebs.facturation.personne.fournisseur.model.entity.Fournisseur;
 import com.zebs.facturation.devis.model.entity.DevisStatus;

@@ -18,6 +18,7 @@ import java.util.Date;
  */
 
 @MappedSuperclass
+@Data
 @EqualsAndHashCode(callSuper = true)
 public abstract class Document extends Base {
 
@@ -42,13 +43,13 @@ public abstract class Document extends Base {
     @Column(name = "total_ttc")
     protected BigDecimal totalTTC;
 
-    @Column(name = "total_net")
-    protected BigDecimal totalNet;
+    @Column(name = "total_net_ht")
+    protected BigDecimal totalNetHt;
+
+    @Column(name = "total_taxe")
+    protected BigDecimal totalTaxe;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.CASCADE)
     protected Projet projet;
-
-
-
 }

@@ -1,16 +1,17 @@
-package com.zebs.facturation.projet.service;
+package com.zebs.facturation.personne.service;
 
-import com.zebs.facturation.projet.model.entity.Projet;
+
+import com.zebs.facturation.personne.model.entity.Personne;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface ProjetService {
-    Projet save(Projet projet);
-    List<Projet> findAll();
-    Projet findById(final UUID id);
-    void delete(Projet projet);
+public interface PersonneService<T extends Personne> {
+    T save(T personne);
+    List<T> findAll();
+    T findById(final UUID id);
+    void delete(T personne);
     void deleteById(UUID id);
-    Projet updateProjet(Projet projet, UUID id);
-    Projet updatePartialProjet(Projet projet, UUID id);
+    T update(T personne, UUID id);
 }
+
