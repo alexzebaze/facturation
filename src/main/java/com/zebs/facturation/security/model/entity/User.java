@@ -4,17 +4,14 @@ package com.zebs.facturation.security.model.entity;
 import com.zebs.facturation.model.entity.Base;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -23,23 +20,33 @@ import java.util.stream.Collectors;
 @Table(name = "users")
 public class User extends Base implements UserDetails {
 
-    @OneToMany(mappedBy = "user")
-    private List<UserRole> roles;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    private Set<Role> roles;
 
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column( nullable = false, unique = true)
     private String username;
 
     private String nom;
     private String prenom;
     private String password;
 
+    private boolean accountNonExpired = true;
+    private boolean accountNonLocked = true;
+    private boolean credentialsNonExpired = true;
+    private boolean enabled = true;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        if(this.roles.size() == 0){
+            Set<GrantedAuthority> authorities = new HashSet<>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            return authorities;
+        }
         return this.roles.stream()
-                .map((userRole)-> new SimpleGrantedAuthority("ROLE_USER"))
                 .collect(Collectors.toSet());
     }
 
@@ -66,6 +73,7 @@ public class User extends Base implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
+                ", roles='" + roles + '\'' +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", nom='" + nom + '\'' +

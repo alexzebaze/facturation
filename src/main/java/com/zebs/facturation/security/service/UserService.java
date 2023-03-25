@@ -23,17 +23,12 @@ public class UserService implements IUserService, UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Could not find user");
         }
-
-        return  org.springframework.security.core.userdetails.User.
-                withUsername(user.getEmail())
-                .password(user.getPassword())
-                .authorities("ROLE_USER").build();
-
+        return  user;
     }
 
     @Override
     public User save(User user) {
-        return null;
+        return userDao.save(user);
     }
 
     @Override

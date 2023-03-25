@@ -1,12 +1,12 @@
 package com.zebs.facturation.commun.config;
 
+import com.zebs.facturation.security.AppAuthentificationProvider;
 import com.zebs.facturation.security.AuthSuccessHandler;
 import com.zebs.facturation.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -30,7 +30,7 @@ public class WebSecurityConfig {
 
         UserDetails user =
                 User.withUsername("user")
-                        .password(passwordEncoder().encode("password"))
+                        .password(passwordEncoder().encode("user"))
                         .roles("USER")
                         .build();
 
@@ -41,7 +41,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/articles/index").permitAll()
+                .antMatchers("/register-processing", "/register").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -63,8 +63,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    public AuthenticationProvider authProvider() {
+        AppAuthentificationProvider authProvider = new AppAuthentificationProvider();
         authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
