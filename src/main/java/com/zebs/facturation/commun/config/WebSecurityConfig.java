@@ -35,8 +35,10 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
+                .cors()
+                .and()
                 .authorizeRequests()
-                .antMatchers("/register-processing", "/register", "/authenticate").permitAll()
+                .antMatchers("/register-processing","/swagger-ui/", "/register", "/authenticate").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
