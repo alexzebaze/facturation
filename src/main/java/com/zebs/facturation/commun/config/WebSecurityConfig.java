@@ -1,22 +1,23 @@
 package com.zebs.facturation.commun.config;
 
-import com.zebs.facturation.security.AppAuthentificationProvider;
 import com.zebs.facturation.security.AuthSuccessHandler;
+import com.zebs.facturation.security.JwtAuthenticationProvider;
 import com.zebs.facturation.security.service.UserService;
+import com.zebs.facturation.security.until.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -25,35 +26,28 @@ public class WebSecurityConfig {
     @Autowired
     UserService userService;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
+    @Autowired
+    JwtTokenFilter jwtTokenFilter;
 
-        UserDetails user =
-                User.withUsername("user")
-                        .password(passwordEncoder().encode("user"))
-                        .roles("USER")
-                        .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
+    @Autowired
+    private JwtAuthenticationProvider jwtAuthProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/register-processing", "/register").permitAll()
+                .antMatchers("/register-processing", "/register", "/authenticate").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin((form) -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/processing")
-                        .usernameParameter("login")
-                        .passwordParameter("password")
-                        .successHandler(authSuccessHandler())
-                        .permitAll()
+                .exceptionHandling()
+                .authenticationEntryPoint(
+                        (request, response, ex) -> {
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+                        }
                 )
-                .authenticationProvider(authProvider());
+                .and()
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -63,11 +57,11 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authProvider() {
-        AppAuthentificationProvider authProvider = new AppAuthentificationProvider();
-        authProvider.setUserDetailsService(userService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(jwtAuthProvider);
+        return authenticationManagerBuilder.build();
     }
 
     @Bean
