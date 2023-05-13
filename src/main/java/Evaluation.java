@@ -1,38 +1,30 @@
-import io.swagger.models.auth.In;
-
-import java.io.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Stack;
 
 public class Evaluation {
 
-    public static void main(String[] args)
-    {
-        String orders = "up up right down left";
-        String[] ordersArr = orders.split(" ");
+    public static void main(String[] args){
 
-        int i = 0;
-        String result = "";
-        while (i<ordersArr.length){
-            String currentStr = ordersArr[i];
-            int count = 0;
-            for (int j = i; j < ordersArr.length ; j++) {
-                if(ordersArr[j].equals(currentStr)) {
-                    count++;
-                }
-                else
-                    break;
-            }
-            result += currentStr+String.valueOf(count);
-
-            i += count;
-        }
-        result = result.replace("up", "^");
-        result = result.replace("right", ">");
-        result = result.replace("left", "<");
-        result = result.replace("down", "v");
-
-        System.out.println(result);
+        System.out.println(check("[(()])"));
     }
+
+    public static boolean check(String str) {
+        Stack<Character> stack = new Stack<>();
+        for (char c : str.toCharArray()) {
+            if (c == '(' || c == '[') {
+                stack.push(c);
+            } else if (c == ')' && !stack.isEmpty() && stack.peek() == '(') {
+                stack.pop();
+            } else if (c == ']' && !stack.isEmpty() && stack.peek() == '[') {
+                stack.pop();
+            } else {
+                return false;
+            }
+        }
+        return stack.isEmpty();
+    }
+
+
+
+
 }
+

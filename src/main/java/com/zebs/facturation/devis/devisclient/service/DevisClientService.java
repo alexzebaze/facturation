@@ -30,7 +30,8 @@ public class DevisClientService implements IDevisClientService {
     }
 
     @Override
-    public List<DevisClient> findAll() {
+    public List<DevisClient> findAll()
+    {
         return devisClientDao.findAll();
     }
 

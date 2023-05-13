@@ -38,7 +38,7 @@ public class WebSecurityConfig {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/register-processing","/swagger-ui/", "/register", "/authenticate").permitAll()
+                .antMatchers("/register-processing", "/v2/api-docs", "/swagger-ui/**", "/swagger-ui.html","/api-docs/**","/v3/api-docs", "/register", "/authenticate", "login").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

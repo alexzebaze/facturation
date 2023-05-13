@@ -21,11 +21,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class SecurityController {
@@ -59,13 +57,38 @@ public class SecurityController {
         }
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/authenticates")
     public ResponseEntity<?> authenticatePost(JwtRequestModel jwtRequest)  {
         try {
             UserDetails user = (User)this.auth(jwtRequest.getUsername(), jwtRequest.getPassword()).getPrincipal();
 
             Map<String, String> result = new HashMap<>();
             result.put("token", jwtTokenUtil.generateToken(user));
+
+            return ResponseEntity.ok()
+                    .header(
+                            HttpHeaders.AUTHORIZATION,
+                            jwtTokenUtil.generateToken(user)
+                    )
+                    .body(result);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<?> authenticatePostApi(@RequestBody JwtRequestModel jwtRequest)  {
+        try {
+            UserDetails user = (User)this.auth(jwtRequest.getUsername(), jwtRequest.getPassword()).getPrincipal();
+
+            String token = jwtTokenUtil.generateToken(user);
+            Date expireAt = jwtTokenUtil.getExpirationDateFromToken(token);
+            System.out.println(expireAt.toString());
+            String expireAtAsSecond = String.valueOf(expireAt.getTime()/1000);
+
+            Map<String, String> result = new HashMap<>();
+            result.put("access_token", token);
+            result.put("expires_at", expireAtAsSecond);
 
             return ResponseEntity.ok()
                     .header(
