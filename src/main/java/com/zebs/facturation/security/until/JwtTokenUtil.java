@@ -2,12 +2,14 @@ package com.zebs.facturation.security.until;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,8 +39,12 @@ public class JwtTokenUtil implements Serializable {
     }
 
     //for retrieveing any information from token we will need the secret key
-    private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    Claims getAllClaimsFromToken(String token) {
+        try {
+            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        } catch(MalformedJwtException e) {
+            throw new MalformedJwtException(e.getMessage());
+        }
     }
 
     private Boolean isTokenExpired(String token) {
@@ -59,8 +65,13 @@ public class JwtTokenUtil implements Serializable {
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, UserDetails userDetails) throws AccessDeniedException {
         final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        Boolean rep =  (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+
+        if (!rep)
+            throw new AccessDeniedException("Le systeme n'a pas pu vous authentifier");
+
+        return rep;
     }
 }

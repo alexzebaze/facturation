@@ -3,8 +3,10 @@ package com.zebs.facturation.commun.config;
 import com.zebs.facturation.security.AuthSuccessHandler;
 import com.zebs.facturation.security.JwtAuthenticationProvider;
 import com.zebs.facturation.security.service.UserService;
+import com.zebs.facturation.security.until.DelegatedAuthenticationEntryPoint;
 import com.zebs.facturation.security.until.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,8 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.http.HttpServletResponse;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
@@ -28,6 +28,10 @@ public class WebSecurityConfig {
 
     @Autowired
     JwtTokenFilter jwtTokenFilter;
+
+    @Autowired
+    @Qualifier("delegatedAuthenticationEntryPoint")
+    DelegatedAuthenticationEntryPoint authEntryPoint;
 
     @Autowired
     private JwtAuthenticationProvider jwtAuthProvider;
@@ -43,11 +47,7 @@ public class WebSecurityConfig {
                 .authenticated()
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
-                        }
-                )
+                .authenticationEntryPoint(authEntryPoint)
                 .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
