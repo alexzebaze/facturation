@@ -1,29 +1,35 @@
 package com.zebs.facturation.commun.exception;
 
 import com.sun.istack.Nullable;
-import com.zebs.facturation.tva.common.exception.TvaException;
+import com.zebs.facturation.projet.common.exception.ProjetException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class RestExceptionHandle {
+public class RestExceptionHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ AuthenticationException.class })
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -32,15 +38,37 @@ public class RestExceptionHandle {
         return this.handleException(ex, HttpStatus.UNAUTHORIZED, null);
     }
 
-    @ExceptionHandler(value = {TvaException.class})
-    public ResponseEntity<Object> handleRestRequestException(TvaException ex){
-        return this.handleException(ex, HttpStatus.CREATED, null);
+    @ExceptionHandler(value = {ProjetException.class})
+    public ResponseEntity<Object> handleRestRequestException(ProjetException ex){
+        return this.handleException(ex, HttpStatus.NOT_FOUND, null);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<Object> handleRestRequestException(AccessDeniedException ex){
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return this.handleException(ex,status ,"Route introuvable");
+    }
 
-        return this.handleException(ex, HttpStatus.CREATED, null);
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return this.handleException(ex,status ,null);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        List<String> details = new ArrayList<String>();
+        details = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField()+ " : " +error.getDefaultMessage())
+                .collect(Collectors.toList());
+
+        return this.handleException(ex,status , details.toString());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return this.handleException(ex,status , ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -84,6 +112,11 @@ public class RestExceptionHandle {
         return this.handleException(ex, HttpStatus.BAD_REQUEST, error);
     }
 
+    /* others handle */
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleOthersException(Exception ex) {
+        return this.handleException(ex, HttpStatus.BAD_REQUEST, "Error occurred");
+    }
 
     public ResponseEntity<Object> handleException(Exception ex, HttpStatus status, @Nullable String message) {
         ResponseExceptionEntity restException = new ResponseExceptionEntity(
@@ -94,6 +127,8 @@ public class RestExceptionHandle {
                 new ArrayList()
         );
 
+        if(message != null)
+            restException.setMessage(message);
 
         return  new ResponseEntity<>(restException, status);
     }
